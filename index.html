@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="kn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Kannada Auto Voice Generator</title>
+<meta name="description" content="Paste a Kannada script, pick a voice, and generate narrated MP3 audio automatically." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__title">
+    <span class="topbar__kn">ಕನ್ನಡ ಧ್ವನಿ</span>
+    <h1>Kannada Auto Voice Generator</h1>
+  </div>
+  <p class="topbar__sub">Paste a script → pick a voice → get MP3 narration.</p>
+</header>
+
+<main class="wrap">
+
+  <!-- Resume banner -->
+  <div id="resumeBanner" class="banner banner--info" hidden>
+    <p id="resumeText"></p>
+    <div class="banner__actions">
+      <button id="resumeBtn" type="button" class="btn btn--ghost">Continue this job</button>
+      <button id="dismissResumeBtn" type="button" class="btn btn--text">Start fresh</button>
+    </div>
+  </div>
+
+  <!-- Script input -->
+  <section class="panel" aria-labelledby="scriptLabel">
+    <div class="panel__head">
+      <label id="scriptLabel" for="scriptInput">Kannada script</label>
+      <span id="charCount" class="charcount">0 characters</span>
+    </div>
+    <textarea
+      id="scriptInput"
+      placeholder="ನಿಮ್ಮ ಕನ್ನಡ ಸ್ಕ್ರಿಪ್ಟ್ ಅನ್ನು ಇಲ್ಲಿ ಅಂಟಿಸಿ..."
+      rows="10"
+      spellcheck="false"
+    ></textarea>
+    <p class="hint">English words and numbers inside the script are kept as-is and sent to ElevenLabs unchanged.</p>
+  </section>
+
+  <!-- Voice -->
+  <section class="panel" aria-labelledby="voiceLabel">
+    <div class="panel__head">
+      <label id="voiceLabel" for="voiceIdInput">Voice ID</label>
+    </div>
+    <input id="voiceIdInput" type="text" inputmode="text" autocomplete="off" placeholder="e.g. 21m00Tcm4TlvDq8ikWAM" />
+
+    <div class="savedvoices">
+      <select id="savedVoiceSelect" aria-label="Saved voices">
+        <option value="">Saved voices…</option>
+      </select>
+      <button id="deleteVoiceBtn" type="button" class="btn btn--ghost btn--small" title="Delete selected saved voice">Delete</button>
+    </div>
+    <div class="savevoice">
+      <input id="voiceNameInput" type="text" placeholder="Name this voice (e.g. Anchor Male)" autocomplete="off" />
+      <button id="saveVoiceBtn" type="button" class="btn btn--ghost btn--small">Save voice</button>
+    </div>
+  </section>
+
+  <!-- Model -->
+  <section class="panel" aria-labelledby="modelLabel">
+    <div class="panel__head">
+      <label id="modelLabel" for="modelInput">TTS model</label>
+    </div>
+    <input id="modelInput" list="modelOptions" type="text" autocomplete="off" value="eleven_multilingual_v2" />
+    <datalist id="modelOptions">
+      <option value="eleven_multilingual_v2">eleven_multilingual_v2 — best quality, recommended for Kannada</option>
+      <option value="eleven_turbo_v2_5">eleven_turbo_v2_5 — faster, lower latency</option>
+      <option value="eleven_flash_v2_5">eleven_flash_v2_5 — fastest</option>
+      <option value="eleven_v3">eleven_v3 — most expressive</option>
+    </datalist>
+    <p class="hint">eleven_multilingual_v2 gives the most natural Kannada narration for long-form content.</p>
+  </section>
+
+  <button id="generateBtn" type="button" class="btn btn--primary btn--generate">Generate Audio</button>
+
+  <!-- Progress -->
+  <section id="progressSection" class="panel" hidden aria-live="polite">
+    <div class="progress__stats">
+      <span id="progressChunkLabel">Chunk 0 / 0</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="progressbar">
+      <div id="progressFill" class="progressbar__fill"></div>
+    </div>
+    <div class="progress__meta">
+      <span id="progressChars">0 characters generated</span>
+      <span id="progressErrors"></span>
+    </div>
+    <p id="statusBanner" class="statusline"></p>
+  </section>
+
+  <!-- Chunk list -->
+  <section id="chunkSection" class="panel" hidden>
+    <div class="panel__head">
+      <span>Chunks</span>
+      <button id="retryFailedBtn" type="button" class="btn btn--ghost btn--small" hidden>Retry failed</button>
+    </div>
+    <ul id="chunkList" class="chunklist"></ul>
+  </section>
+
+  <!-- Final actions -->
+  <section id="finalActions" class="finalactions" hidden>
+    <button id="downloadAllBtn" type="button" class="btn btn--ghost">Download All (.zip)</button>
+    <button id="mergeAllBtn" type="button" class="btn btn--ghost">Merge Into One MP3</button>
+    <button id="resetBtn" type="button" class="btn btn--text">Start a new script</button>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>Audio is generated by the ElevenLabs API. Your API key stays on the server.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

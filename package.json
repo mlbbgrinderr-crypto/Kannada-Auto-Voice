@@ -1,0 +1,9 @@
+{
+  "name": "kannada-auto-voice-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile-first web app that turns a long Kannada script into MP3 narration using the ElevenLabs API.",
+  "engines": {
+    "node": ">=18"
+  }
+}
