@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
   const modelId =
     typeof body.model_id === 'string' && body.model_id.trim()
       ? body.model_id.trim()
-      : 'eleven_multilingual_v2';
+      : 'eleven_v3';
 
   if (!text.trim()) {
     return res.status(400).json({ error: 'No text provided for this chunk.' });
